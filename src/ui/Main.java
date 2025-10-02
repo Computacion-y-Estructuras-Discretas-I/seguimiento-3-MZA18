@@ -81,4 +81,79 @@ public class Main {
         Main app = new Main();
         app.ejecutar();
     }
+
+  
+    public static boolean verificarBalanceo(String s) {
+        estructuras.PilaGenerica<Character> pilaTmp = null;
+        try {
+
+            pilaTmp = new estructuras.PilaGenerica<Character>();
+        } catch (Throwable t) {
+            try {
+                pilaTmp = (estructuras.PilaGenerica<Character>)(Object)null; // sólo para compilar si no existe
+            } catch (Throwable ignore) {}
+        }
+
+        structures.PilaGenerica<Character> pila = new structures.PilaGenerica<>();
+        if (s == null) s = "";
+        for (char c : s.toCharArray()) {
+            if (c == '(' || c == '[' || c == '{') {
+                pila.push(c);
+            } else if (c == ')' || c == ']' || c == '}') {
+                if (pila.isEmpty()) return false;
+                Character top = pila.pop();
+                if ((c == ')' && top != '(') ||
+                    (c == ']' && top != '[') ||
+                    (c == '}' && top != '{')) {
+                    return false;
+                }
+            }
+        }
+        return pila.isEmpty();
+    }
+
+
+    public static java.util.List<String> paresQueSuman(int[] numeros, int objetivo) {
+        java.util.ArrayList<String> pares = new java.util.ArrayList<>();
+        if (numeros == null) return pares;
+
+        structures.TablasHash th = new structures.TablasHash(Math.max(1, numeros.length * 2));
+
+
+        for (int num : numeros) {
+            try {
+                th.insert(num, num);
+            } catch (Exception e) {
+
+            }
+        }
+
+        java.util.HashSet<String> vistos = new java.util.HashSet<>();
+        for (int num : numeros) {
+            int comp = objetivo - num;
+            Integer encontrado = null;
+            try {
+
+                encontrado = th.buscar(comp);
+            } catch (Exception e) {
+
+            }
+            if (encontrado != null) {
+                int a = Math.min(num, comp);
+                int b = Math.max(num, comp);
+                String clave = a + ":" + b;
+                if (!vistos.contains(clave)) {
+                    vistos.add(clave);
+                    pares.add("(" + a + ", " + b + ")");
+                }
+            }
+        }
+        return pares;
+    }
+
 }
+
+
+// asi se compila :  :)
+// javac -cp src src/ui/Main.java -d bin
+//java -cp bin ui/Main
